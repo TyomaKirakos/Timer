@@ -1,3 +1,4 @@
+// Константы и переменные
 const daysBlock = document.querySelector('.days-block__number');
 const daysText = document.querySelector('.days-block__subtitle');
 
@@ -14,10 +15,36 @@ let days;
 let hours;
 let minutes;
 let seconds;
-let destinyDay = new Date(2022, 0, 31, 16 , 20, 50 );
+let destinyDay = new Date(2022, 1, 3, 0 , 0, 0 );
 let timeInterval;
 let currentDate;
 
+// Функции
+// Функция для склонения
+function declNum(number, text_forms) {  
+    number = Math.abs(number) % 100; 
+    let number1 = number % 10;
+    if (number > 10 && number < 20) {
+        return text_forms[2];
+    } else if (number1 > 1 && number1 < 5) {
+        return text_forms[1];
+    } else if (number1 == 1) {
+        return text_forms[0];
+    }
+    
+    return text_forms[2];
+}
+
+// функция вставки чисел в верстку
+function inputDigits(number, numberPlace){
+    if (String(number).length == 1){
+        numberPlace.textContent = '0' + number;
+    } else{
+        numberPlace.textContent = number;
+    }
+}
+
+// общая функция работы таймера
 function calculatingTime(){
     currentDate = new Date();
     timeInterval = destinyDay - currentDate;
@@ -28,60 +55,19 @@ function calculatingTime(){
     days = Math.floor(timeInterval / 1000 / 60 / 60 / 24);
     console.log(seconds);
 
-    if (String(seconds)[String(seconds).length-1] == '1'){
-        secondsText.textContent = 'секунда'
-    } else if (String(seconds)[String(seconds).length-1] == '2' || String(seconds)[String(seconds).length-1] == '3' || String(seconds)[String(seconds).length-1] == '4'){
-        secondsText.textContent = 'секунды';
-    } else{
-        secondsText.textContent = 'секунд';
-    }
+    secondsText.textContent = declNum(seconds, ['секунда', 'секунды', 'секунд']);
+    minutesText.textContent = declNum(minutes, ['минута', 'минуты', 'минут']);
+    hoursText.textContent = declNum(hours, ['час', 'часа', 'часов']);
+    daysText.textContent = declNum(days, ['день', 'дня', 'дней']);
 
-    if (String(seconds).length == 1){
-        secondsBlock.textContent = '0' + seconds;
-    } else{
-        secondsBlock.textContent = seconds;
-    }
-
-    if (String(minutes)[String(minutes).length-1] == '1'){
-        minutesText.textContent = 'минута'
-    } else if (String(minutes)[String(minutes).length-1] == '2' || String(minutes)[String(minutes).length-1] == '3' || String(minutes)[String(minutes).length-1] == '4'){
-        minutesText.textContent = 'минуты';
-    } else{
-        minutesText.textContent = 'минут';
-    }
-
-    if (String(minutes).length == 1){
-        minutesBlock.textContent = '0' + minutes;
-    } else{
-        minutesBlock.textContent = minutes;
-    }
-
-    if (String(hours)[String(hours).length-1] == '1'){
-        hoursText.textContent = 'час'
-    } else if (String(hours)[String(hours).length-1] == '2' || String(hours)[String(hours).length-1] == '3' || String(hours)[String(hours).length-1] == '4'){
-        hoursText.textContent = 'часа';
-    } else{
-        hoursText.textContent = 'часов';
-    }
-
-    if (String(hours).length == 1){
-        hoursBlock.textContent = '0' + hours;
-    } else{
-        hoursBlock.textContent = hours;
-    }
-
-    if (String(days)[String(days).length-1] == '1'){
-        daysText.textContent = 'день'
-    } else if (String(days)[String(days).length-1] == '2' || String(days)[String(days).length-1] == '3' || String(days)[String(days).length-1] == '4'){
-        daysText.textContent = 'дня';
-    } else{
-        daysText.textContent = 'дней';
-    }
+    inputDigits(seconds, secondsBlock);
+    inputDigits(minutes, minutesBlock);
+    inputDigits(hours, hoursBlock);
 
     daysBlock.textContent = days;
 };
 
-
+// функция, что позволяет изменять время каждую секунду
 let timerWorking = setInterval(() => {
     calculatingTime();
     if (timeInterval <= 1000){
